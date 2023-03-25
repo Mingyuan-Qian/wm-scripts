@@ -1,0 +1,32 @@
+#!/bin/sh
+
+history=$HOME/.local/share/dhistory
+cmd=$(tac $history | dmenu -p "input commands here:" -i -l 6 -fn 10)
+
+if [ -z "$cmd" ]
+then
+    exit
+else
+    if [ "$cmd" = clear ]
+    then
+        cat /dev/null > $history
+    else
+        if grep -q "$cmd" $history
+        then
+            true
+        else
+            echo "$cmd" >> $history
+        fi
+        stdout=$(eval $cmd 2> /dev/null)
+    fi
+fi
+
+if [ "$1" = out ]
+then
+    if [ -z "$stdout" ]
+    then
+        exit
+    else
+        echo $stdout | ansi2txt | yad --text-info --editable --show-uri --wrap --no-buttons --width=800 --height=400 --posx=500 --posy=400
+    fi
+fi
