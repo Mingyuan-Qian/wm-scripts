@@ -1,0 +1,4 @@
+#!/bin/sh
+
+xsel -op > ~/.tmp/say
+espeak --stdin < ~/.tmp/say
