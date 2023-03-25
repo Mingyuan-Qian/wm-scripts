@@ -1,0 +1,29 @@
+#!/bin/sh
+
+bookmarks="$HOME/.local/share/bookmarks"
+
+browser=$(echo qutebrowser\\nfirefox | dmenu -p 'which browser to use')
+if [ -z "$browser" ]
+then
+    exit
+fi
+
+url=$(dmenu -l 10 -p "enter the url: " < $bookmarks | cut -f 1)
+if [ -z "$url" ]
+then
+    exit 1
+fi
+
+if grep -q "$url" "$bookmarks"
+then
+    exec $browser "$url"
+else
+    name="$(echo -n | dmenu -p 'enter the name of the website. ')"
+    tag="$(cut -f 3 "$bookmarks" | sort | uniq | dmenu -l 10 -p 'enter the tag of the website. ')"
+    if [ -z $name -o -z $tag ]
+    then
+        exit
+    fi
+    echo "$url\\t$name\\t$tag" >> "$bookmarks"
+    notify-send "$name($tag) is added to bookmarks."
+fi
