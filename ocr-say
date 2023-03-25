@@ -1,0 +1,10 @@
+#!/bin/sh
+
+sleep .3s
+ocr_image=~/.tmp/ocr-say.$(date +%s).png
+scrot --select $ocr_image
+
+ocr_result=~/.tmp/ocr-result
+tesseract -l eng $ocr_image $ocr_result
+cat $ocr_result.txt | xsel -ib
+espeak -f $ocr_result.txt
