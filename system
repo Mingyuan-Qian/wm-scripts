@@ -1,0 +1,29 @@
+#!/bin/sh
+
+what=$1
+yesno=$(echo  "no\\nyes" | dmenu -p "Do you want to $what")
+if [ "$yesno" = yes ]
+then
+    case $what in
+        hiberate )
+            sleep 2s
+            systemctl hibernate
+            ;;
+        i3-exit )
+            i3-msg exit
+            ;;
+        poweroff )
+            systemctl poweroff -i
+            ;;
+        reboot )
+            systemctl reboot
+            ;;
+        suspend )
+            systemctl suspend
+            ;;
+        * )
+            exit
+    esac
+else
+    exit
+fi
