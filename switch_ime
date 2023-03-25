@@ -1,0 +1,12 @@
+#!/bin/sh
+
+chinese_ime=rime
+english_ime=xkb:us::eng
+current_ime=$(ibus engine)
+
+if [ $current_ime = $chinese_ime ]
+then
+	ibus engine $english_ime
+else
+	ibus engine $chinese_ime
+fi
