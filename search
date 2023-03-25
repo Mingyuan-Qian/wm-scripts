@@ -1,0 +1,33 @@
+#!/bin/sh
+
+bang=~/.local/share/bang.json
+history=~/.local/share/bang_histroy
+browser=$(echo qutebrowser\\nfirefox | dmenu -p 'which browser to use')
+
+if [ -z "$browser" ]
+then
+    exit
+fi
+
+what=$(uniq $history | dmenu -l 10 -p "what you want to search?")
+
+if [ -z "$what" ]
+then
+    exit
+else
+    if grep -q "$what" $history
+    then
+        true
+    else
+        echo "$what" >> $history
+    fi
+    url="$(jq .u < $bang | dmenu -l 10 | sed "s/{{{s}}}/$what/")"
+    if [ -z "$url" ]
+    then
+        exit
+    else
+        url=$(echo "$url" | tr -d \")
+        exec $browser "$url"
+    fi
+fi
+
