@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# remind me the time
+sleep $(( (60-$(date +%M)) %30 ))m
+while true
+do
+    xdotool mousemove_relative 1 1  # mouse mouse to activate the screen
+    notify-send "$(date +%H:%M)"   # show current time
+    sleep 30m
+done
