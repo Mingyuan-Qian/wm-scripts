@@ -1,0 +1,60 @@
+#!/bin/sh
+
+result=~/.tmp/sdcv
+history=~/.sdcv_history
+tmp=~/.tmp/sdcv_tmp_history
+
+show()
+{
+    # show the window
+    window_width=730
+    window_height=350
+    screen_width=$(xrandr | grep "Screen 0" | cut -d "," -f 2 | cut -d " " -f 3)
+    screen_height=$(xrandr | grep "Screen 0" | cut -d "," -f 2 | cut -d " " -f 5)
+    eval $(xdotool getmouselocation --shell)	# get cursor location
+    x_mouse=$(( $X + 30 ))	# prevent the cursor hide the text
+    y_mouse=$(( $Y + 30 ))
+
+    # check if window out of screen
+    if [ $(( $y_mouse + $window_height )) -ge $screen_height ]
+    then y_mouse=$(( $y_mouse - $window_height ))
+    fi
+
+    if [ $(( $x_mouse + $window_width )) -ge $screen_width ]
+    then x_mouse=$(( $x_mouse - $window_width ))
+    fi
+
+    yad --text-info --show-uri --wrap --editable --no-buttons --width=$window_width --height=$window_height --posx=$x_mouse --posy=$y_mouse --filename=$result
+}
+
+# select word
+if [ -z "$*" ]
+then
+    exit
+elif [ $1 = clip ]
+then
+    word="$(xsel -op)"
+elif [ $1 = input ]
+then
+    word="$(uniq $history | dmenu -p 'enter the word you want to look up:')"
+    echo $word | xsel -ip
+fi
+
+if [ -z "$word" ]
+then
+    exit
+fi
+
+# check chinese or english and generate word meanings
+if echo -n $word | grep -i -q "a\|b\|c\|d\|e\|f\|g\|h\|i\|j\|k\|l\|m\|n\|o\|p\|q\|r\|s\|t\|u\|v\|w\|x\|y\|z"
+then
+    sdcv --non-interactive --use-dict "中英双语词典" --use-dict "朗道英汉字典5.0" --use-dict "GNU/Linux English-English Dictionary" "$word" > $result
+else
+    sdcv --non-interactive --use-dict "现代汉语词典" --use-dict "新华字典" --use-dict "科技词汇词典" "$word" > $result
+fi
+
+# remove duplicate words
+sort --unique $history | uniq > $tmp; mv $tmp $history; rm $tmp
+
+# show word meanings
+show

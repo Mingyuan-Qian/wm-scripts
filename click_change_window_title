@@ -1,0 +1,9 @@
+#!/bin/sh
+
+title="$(echo -n | dmenu -p "type the window title you want")"
+if [ -z "$title" ]
+then
+    exit
+else
+    xdotool selectwindow set_window --name "${title}"
+fi

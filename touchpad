@@ -1,0 +1,16 @@
+#!/bin/bash
+
+touchpad_info=`xinput list --short | grep -i touchpad`
+touchpad_id=`echo $touchpad_info | cut -f 2 | cut -d "=" -f 2 | cut -d " " -f 1`
+x=$(xrandr | grep "Screen 0" | cut -d "," -f 2 | cut -d " " -f 3)       # screen 0 width
+y=$(xrandr | grep "Screen 0" | cut -d "," -f 2 | cut -d " " -f 5)       # screen 0 height
+if [ $1 == on ]
+then
+	xinput enable $touchpad_id
+    xdotool mousemove -- $(($x/2)) $(($y/2))
+	notify-send "touchpad enabled"
+else
+	xinput disable $touchpad_id
+    xdotool mousemove -- $(($x/2)) $y
+	notify-send "touchpad disabled"
+fi

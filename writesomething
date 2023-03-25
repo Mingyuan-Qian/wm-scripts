@@ -1,0 +1,9 @@
+#!/bin/sh
+
+content=$(yad --text-info --text="Type something and it will be copyed to clipboard, \"ESC\" to confirm." --no-buttons --escape-ok --editable --wrap --center --width=800 --height=400)
+if [ -z "$content" ]
+then
+    exit
+else
+    echo "$content" | xsel -ib
+fi
