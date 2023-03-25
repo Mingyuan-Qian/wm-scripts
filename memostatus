@@ -1,0 +1,8 @@
+#!/bin/sh
+
+output=~/.tmp/bar
+while true
+do
+    sleep 1s
+    memo | cut -f 4 | tr '\n' ' ' | ansi2txt > $output
+done
