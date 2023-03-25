@@ -12,3 +12,4 @@ brightnessctl set 90 &  # control brightness of the screen
 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &    # launch polkit to enable authentication of desktop entry
 pngphoon -w 1920 -h 1080 -f ~/.tmp/moon.png && feh --bg-fill ~/.tmp/moon.png &  # moon wallpaper
 picom & # window compositor
+parcellite  # clipboard manager
