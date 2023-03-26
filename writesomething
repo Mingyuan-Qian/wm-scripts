@@ -3,12 +3,12 @@
 
 if [ $1 = append ]
 then
-    content=$(xsel -ob | yad --text-info --text="Type something and it will be copyed to clipboard, \"ESC\" to confirm." --no-buttons --escape-ok --editable --wrap --center --width=800 --height=400)
+    content=$(xsel -ob | col -b | yad --text-info --text="Type something and it will be copyed to clipboard, \"ESC\" to confirm." --no-buttons --escape-ok --editable --wrap --center --width=800 --height=400)
     if [ -z "$content" ]
     then
         exit
     else
-        if [ $(echo "$content" | base64) = "$(xsel -ob | base64)" ]
+        if [ "$(echo "$content" | base64 --wrap=0)" = "$(xsel -ob | col -b | base64 --wrap=0)" ]
         then
             exit
         else
